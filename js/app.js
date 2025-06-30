@@ -35,9 +35,10 @@ let winner ;
 let tie ;
 
 /*------------------------ Cached Element References ------------------------*/
-const squreEls =document.querySelectorAll(".sqr");
-const messageEl =document.querySelector("#message");
+const squreEls = document.querySelectorAll(".sqr");
+const messageEl = document.querySelector("#message");
 
+const resetBtnEl = document.querySelector("#reset-button");
 
 /*-------------------------------- Functions --------------------------------*/
 
@@ -72,7 +73,7 @@ function updateMessage(){
     if( winner === false && tie === false ){
         messageEl.textContent =`It's ${turn}'s turn`
     } else if ( winner === false && tie === true ) {
-        messageEl.textContent = `It iss a tie!`;
+        messageEl.textContent = `It is a tie!`;
     } else if ( winner === true ){
         messageEl.textContent = `Congrats, ${turn} wins!`;
     }
@@ -85,54 +86,54 @@ function handleClick(event){
     if( board[squareIndex] === 'X' || board[squareIndex] === '0' || winner ){
         return;
     } 
-
-    console.log('cliicked square index',squareIndex)
-    // placePiece(squareIndex );
     
     placePiece(squareIndex);
+    checkForWinner();
+    checkForTie();
+    switchPlayerTurn();
+    render();
 }
-
-// function handleClick(event) {
-//   const clickedEl = event.target;
-//   if (!clickedEl.classList.contains('square')) return;
-
-//   const squareIndex = parseInt(clickedEl.id.replace('square-', ''));
-
-//   if (board[squareIndex] || winner) return;
-
-//   placePiece(squareIndex); // ← هنا أضفنا السطر حسب الخطوة 6.1
-// }
-
 
 function placePiece(index){
     board[index] = turn;
-    console.log(board);
 }
 
-function checkForWinner(board ,player){
-    for (let combination of winningCombos){
-        const [a, b, c] = combination;
-        if ( board[a] === player && 
-            board[b]=== player && 
-            board[c] === player )
-            return true;
+function checkForWinner() {
+  for (let combo of winningCombos) {
+    const [a, b, c] = combo;
+    if (
+      board[a] !== '' &&
+      board[a] === board[b] &&
+      board[a] === board[c]
+    ) {
+      winner = true;
     }
-    {
-        return true;
-    }
-
+  }
 }
+
 
 function checkForTie(){
     if(winner) return;
     tie = board.every((square) => square !== '');
-console.log(tie)
 }
-checkForTie();
+
+function switchPlayerTurn() {
+    if (winner) return;       
+
+    if (turn === 'X') {
+        turn = '0';             
+    } else {
+        turn = 'X';             
+    }
+}
+
+
 /*----------------------------- Event Listeners -----------------------------*/
 
 for( let i=0 ; i < squreEls.length ; i++ ){
     squreEls[i].addEventListener('click', handleClick);
 }; 
+
+resetBtnEl.addEventListener('click', init);
 
 
