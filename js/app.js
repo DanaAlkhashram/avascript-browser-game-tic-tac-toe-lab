@@ -42,7 +42,7 @@ const messageEl =document.querySelector("#message");
 /*-------------------------------- Functions --------------------------------*/
 
 function init() {
-    board = ['X','0','','','','','','',''];
+    board = ['','','','','','','','',''];
     turn = 'X';
     winner = false;
     tie = false;
@@ -79,6 +79,60 @@ function updateMessage(){
 
 }
 
+function handleClick(event){
+    const squareIndex = Number(event.target.id);
+
+    if( board[squareIndex] === 'X' || board[squareIndex] === '0' || winner ){
+        return;
+    } 
+
+    console.log('cliicked square index',squareIndex)
+    // placePiece(squareIndex );
+    
+    placePiece(squareIndex);
+}
+
+// function handleClick(event) {
+//   const clickedEl = event.target;
+//   if (!clickedEl.classList.contains('square')) return;
+
+//   const squareIndex = parseInt(clickedEl.id.replace('square-', ''));
+
+//   if (board[squareIndex] || winner) return;
+
+//   placePiece(squareIndex); // ← هنا أضفنا السطر حسب الخطوة 6.1
+// }
+
+
+function placePiece(index){
+    board[index] = turn;
+    console.log(board);
+}
+
+function checkForWinner(board ,player){
+    for (let combination of winningCombos){
+        const [a, b, c] = combination;
+        if ( board[a] === player && 
+            board[b]=== player && 
+            board[c] === player )
+            return true;
+    }
+    {
+        return true;
+    }
+
+}
+
+function checkForTie(){
+    if(winner) return;
+    tie = board.every((square) => square !== '');
+console.log(tie)
+}
+checkForTie();
 /*----------------------------- Event Listeners -----------------------------*/
+
+for( let i=0 ; i < squreEls.length ; i++ ){
+    squreEls[i].addEventListener('click', handleClick);
+}; 
 
 
